@@ -5,10 +5,8 @@ import com.ecommerce.Ecommerce.service.CategoryServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.tags.EscapeBodyTag;
 
 import java.util.List;
 
@@ -30,8 +28,8 @@ public class CategoryController {
     @DeleteMapping("/api/public/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         try {
-            String status = categoryService.deleteCategory(categoryId);
-            return ResponseEntity.ok(status);
+           categoryService.deleteCategory(categoryId);
+            return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getReason());
         }
