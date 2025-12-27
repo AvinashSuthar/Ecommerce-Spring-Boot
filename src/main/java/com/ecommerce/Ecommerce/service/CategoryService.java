@@ -1,5 +1,7 @@
 package com.ecommerce.Ecommerce.service;
 
+import com.ecommerce.Ecommerce.exceptions.APIException;
+import com.ecommerce.Ecommerce.exceptions.ResourceNotFoundException;
 import com.ecommerce.Ecommerce.model.Category;
 import com.ecommerce.Ecommerce.respositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,16 @@ public class CategoryService implements CategoryServiceI {
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+
+        List<Category> categories =  categoryRepository.findAll();
+        if(categories.isEmpty()) throw new APIException("No categories are created till now");
+        return categories;
     }
 
     @Override
     public Category createCategory(Category category) {
+        Category category1 = categoryRepository.findByCategoryName(category.getCategoryName());
+        if(category1 != null) throw new APIException("Category Already exists with " + category1.getCategoryName() + " name");
         return categoryRepository.save(category);
     }
 
@@ -39,6 +46,6 @@ public class CategoryService implements CategoryServiceI {
             existingCategory.setCategoryName(category.getCategoryName());
             return categoryRepository.save(existingCategory);
         }
-        return null;
+        throw  new ResourceNotFoundException("Category" , "CategoryId" , categoryId);
     }
 }

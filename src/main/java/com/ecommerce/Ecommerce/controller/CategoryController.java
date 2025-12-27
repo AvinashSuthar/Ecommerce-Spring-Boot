@@ -2,6 +2,7 @@ package com.ecommerce.Ecommerce.controller;
 
 import com.ecommerce.Ecommerce.model.Category;
 import com.ecommerce.Ecommerce.service.CategoryServiceI;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,21 +12,23 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class CategoryController {
     @Autowired
     private CategoryServiceI categoryService;
 
-    @GetMapping("/api/public/categories")
+    @GetMapping("/public/categories")
     public List<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
-    @PostMapping("/api/public/categories")
-    public void createCategory(@RequestBody Category category) {
-        categoryService.createCategory(category);
+    @PostMapping("/admin/categories")
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
+        Category newCategory =  categoryService.createCategory(category);
+        return new ResponseEntity<Category>(category, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/api/public/categories/{categoryId}")
+    @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         try {
            categoryService.deleteCategory(categoryId);
@@ -35,14 +38,12 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("api/public/categories/{categoryId}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
-        try {
+    @PutMapping("/admin/categories/{categoryId}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId,@Valid @RequestBody Category category) {
+
             Category updatedCategory = categoryService.updateCategory(categoryId, category);
-            return ResponseEntity.ok(updatedCategory);
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+            return ResponseEntity.ok("Category Updated");
+
     }
 
 
