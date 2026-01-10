@@ -1,0 +1,16 @@
+package com.ecommerce.Ecommerce.controller;
+
+import com.ecommerce.Ecommerce.payload.APIResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class GlobalController {
+
+    @GetMapping("/")
+    public ResponseEntity<APIResponse> health(){
+        return new ResponseEntity<>(new APIResponse("message" , true) , HttpStatus.OK);
+    }
+}
