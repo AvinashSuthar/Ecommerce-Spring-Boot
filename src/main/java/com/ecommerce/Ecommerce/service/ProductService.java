@@ -1,16 +1,23 @@
 package com.ecommerce.Ecommerce.service;
 
-import com.ecommerce.Ecommerce.model.Product;
 import com.ecommerce.Ecommerce.payload.ProductDTO;
 import com.ecommerce.Ecommerce.payload.ProductResponse;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface ProductService {
-    ProductDTO createProduct(Product product , Long categoryId);
+    ProductDTO createProduct(ProductDTO productDTO , Long categoryId);
 
-    ResponseEntity<ProductResponse> getAllProducts();
+    ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
-    ProductResponse getProductsByCategory(Long categoryId);
+    ProductResponse getProductsByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
-    ProductResponse getProductsByKeyword(String keyword);
+    ProductResponse getProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
+
+    ProductDTO updateProduct(Long productId, ProductDTO productDTO);
+
+    ProductDTO deleteProduct(Long productId);
+
+    ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 }

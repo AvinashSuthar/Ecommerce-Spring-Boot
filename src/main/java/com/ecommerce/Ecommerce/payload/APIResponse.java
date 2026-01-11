@@ -8,7 +8,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class APIResponse {
+public class APIResponse<T> {
     private String message;
     private boolean status;
+    private T data;
+
+    public APIResponse(String message, boolean status) {
+        this.message = message;
+        this.status = status;
+        this.data = null;
+    }
+
 }

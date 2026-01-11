@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalController {
 
     @GetMapping("/")
-    public ResponseEntity<APIResponse> health(){
-        return new ResponseEntity<>(new APIResponse("message" , true) , HttpStatus.OK);
+    public ResponseEntity<String> health(){
+        return new ResponseEntity<>("working" , HttpStatus.OK);
     }
 }

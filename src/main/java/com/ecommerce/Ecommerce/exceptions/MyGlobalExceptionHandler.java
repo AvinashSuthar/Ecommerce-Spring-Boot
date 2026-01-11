@@ -1,6 +1,8 @@
 package com.ecommerce.Ecommerce.exceptions;
 
 
+import com.ecommerce.Ecommerce.payload.APIResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,6 +17,8 @@ import java.util.Map;
 
 public class MyGlobalExceptionHandler {
 
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> myMethodArgumentNotValidException(MethodArgumentNotValidException e){
         Map<String , String> response = new HashMap<>();
@@ -24,17 +28,30 @@ public class MyGlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<APIResponse<Map<String, String>>> handleConstraintViolation(
+            ConstraintViolationException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getConstraintViolations()
+                .forEach(v -> errors.put(v.getPropertyPath().toString(), v.getMessage()));
+
+        return ResponseEntity.badRequest()
+                .body(new APIResponse<>("Validation failed", false, errors));
+    }
+
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> myResourceNotFoundException(ResourceNotFoundException e){
+    public ResponseEntity<APIResponse> myResourceNotFoundException(ResourceNotFoundException e){
         String message = e.getMessage();
-        return new ResponseEntity<>(message , HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new APIResponse<>(message, false) , HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(APIException.class)
-    public ResponseEntity<String> myAPIException(APIException e){
+    public ResponseEntity<APIResponse> myAPIException(APIException e){
         String message = e.getMessage();
-        return new ResponseEntity<>(message , HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new APIResponse<>(message, false) , HttpStatus.NOT_FOUND);
     }
-
-
 }
